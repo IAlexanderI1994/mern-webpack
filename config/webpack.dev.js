@@ -1,7 +1,7 @@
-const path     = require('path')
-const webpack  = require('webpack')
+const path              = require('path')
+const webpack           = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-module.exports = {
+module.exports          = {
   entry: {
     main: './src/main.js'
   },
