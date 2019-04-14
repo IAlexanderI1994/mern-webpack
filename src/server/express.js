@@ -3,16 +3,23 @@ import path from 'path'
 import webpack from 'webpack'
 import config from '../../config/webpack.dev'
 import keys from '../../config/keys'
-
+import mongoose from 'mongoose'
 import users from './routes/api/users'
 import posts from './routes/api/posts'
 import profile from './routes/api/profile'
+import bodyParser from 'body-parser'
+
 
 const server   = express()
-const mongoose = require('mongoose')
 
-// получаем конфиг базы
+
+// Body parser middleware (for post requests handling )
+server.use(bodyParser.urlencoded({ extended: false }))
+server.use(bodyParser.json())
+// getting db config
 const { mongoURI: db } = keys
+
+
 
 mongoose
   .connect(db)
@@ -28,7 +35,7 @@ server.use(webpackDevMiddleware)
 server.use(webpackHotMiddleware)
 server.use(staticMiddleware)
 
-// апи РОУТЫ
+// API Routes
 server.use('/api/users/', users)
 server.use('/api/posts/', posts)
 server.use('/api/profile/', profile)
