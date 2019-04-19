@@ -2,6 +2,10 @@ import express from 'express'
 import { User } from '../../models/User'
 import gravatar from 'gravatar'
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import keys from '../../../../config/keys'
+import passport from 'passport'
+import validateRegisterInput from '../../validation/register'
 
 const router = express.Router()
 /**
@@ -13,14 +17,21 @@ router.get('/test', (req, res) => res.json({ msg: 'Users works!' }))
 
 /**
  * @route - POST api/users/register
- * @desc - Register user
+ * @desc - Login users / Returning JWT Token
  * @access - public
  */
 
 router.post('/register', ({ body: request }, res) => {
-  User.findOne({ email: request.email }).then(user => {
-    if (user) return res.status(400).json({ email: 'email already exists' })
 
+  const { errors, isValid } = validateRegisterInput(request)
+
+  if (!isValid) return res.status(400).json(errors)
+
+  User.findOne({ email: request.email }).then(user => {
+    if (user) {
+      errors.email = 'email already exists'
+      return res.status(400).json(errors)
+    }
     const { name, email, password } = request
     const avatar                    = gravatar.url(email, {
       s: 200,
@@ -39,6 +50,49 @@ router.post('/register', ({ body: request }, res) => {
     })
 
   })
+})
+
+/**
+ * @route - POST api/users/login
+ * @desc - Register user
+ * @access - public
+ */
+
+router.post('/login', ({ body: request }, res) => {
+  const { email, password } = request
+  User.findOne({ email }).then(user => {
+
+    // check for user
+    if (!user) return res.status(404).json({ email: 'User not found' })
+
+    // check for password
+    bcrypt.compare(password, user.password).then(isMatch => {
+      if (isMatch) {
+        // create jwt payload
+        const payload = { id: user.id, name: user.name }
+
+        jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+          res.json({ success: 'true', token: 'Bearer ' + token })
+        })
+
+      } else {
+        return res.status(400).json({ password: 'Password incorrect' })
+      }
+    })
+
+  })
+
+})
+
+/**
+ * @route - GET api/users/current
+ * @desc - Return current user
+ * @access - private
+ */
+
+router.get('/current', passport.authenticate('jwt', { session: false }), ({ user }, res) => {
+  const { id, email, name } = user
+  res.json({ id, email, name })
 })
 
 export default router

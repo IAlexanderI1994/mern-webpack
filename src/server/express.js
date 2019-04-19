@@ -1,17 +1,19 @@
-import express from 'express'
 import path from 'path'
 import webpack from 'webpack'
 import config from '../../config/webpack.dev'
 import keys from '../../config/keys'
+
+import express from 'express'
 import mongoose from 'mongoose'
+import bodyParser from 'body-parser'
+import passport from 'passport'
+import passportConfig from '../../config/passport'
+
 import users from './routes/api/users'
 import posts from './routes/api/posts'
 import profile from './routes/api/profile'
-import bodyParser from 'body-parser'
 
-
-const server   = express()
-
+const server = express()
 
 // Body parser middleware (for post requests handling )
 server.use(bodyParser.urlencoded({ extended: false }))
@@ -19,12 +21,16 @@ server.use(bodyParser.json())
 // getting db config
 const { mongoURI: db } = keys
 
-
-
 mongoose
   .connect(db)
   .then(() => console.log('DB connected'))
-  .catch( e => console.log(e))
+  .catch(e => console.log(e))
+
+// passport middleware
+server.use(passport.initialize())
+
+passportConfig(passport)
+
 
 const compiler             = webpack(config)
 const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer)
