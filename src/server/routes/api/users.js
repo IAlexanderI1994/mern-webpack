@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken'
 import keys from '../../../../config/keys'
 import passport from 'passport'
 import validateRegisterInput from '../../validation/register'
+import validateLoginInput from '../../validation/login'
 
 const router = express.Router()
 /**
@@ -59,6 +60,11 @@ router.post('/register', ({ body: request }, res) => {
  */
 
 router.post('/login', ({ body: request }, res) => {
+
+  const { errors, isValid } = validateLoginInput(request)
+
+  if (!isValid) return res.status(400).json(errors)
+
   const { email, password } = request
   User.findOne({ email }).then(user => {
 
