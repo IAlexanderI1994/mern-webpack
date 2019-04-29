@@ -248,11 +248,87 @@ router.post('/education', passport.authenticate('jwt', { session: false }), ({ u
            profile.education.unshift(newEdu)
            profile.save()
                   .then(profile => res.json(profile))
-             .catch(e => res.status(404).json(errors))
+                  .catch(e => res.status(404).json(errors))
 
          })
          .catch(errors => res.status(404).json(errors))
 
 })
+
+/**
+ * @route - DELETE api/profile/experience/:exp_id
+ * @desc - delete education from profile
+ * @access - private
+ */
+
+router.delete('/experience/:exp_id',
+  passport.authenticate('jwt', { session: false }),
+  ({ user, params }, res) => {
+
+    const errors = {}
+    Profile.findOne({ user: user.id })
+           .then(profile => {
+             const removeIndex = profile.experience.findIndex(exp => exp.id === params.exp_id)
+             if (removeIndex === -1) {
+               errors.experience = 'experience not found'
+               return res.status(404).json(errors)
+             }
+
+             profile.experience.splice(removeIndex, 1)
+             profile.save()
+                    .then(profile => res.json(profile))
+                    .catch(error => res.status(404).json(error))
+
+           })
+           .catch(errors => res.status(404).json(errors))
+
+  })
+
+/**
+ * @route - DELETE api/profile/education/:edu_id
+ * @desc - delete education from profile
+ * @access - private
+ */
+
+router.delete('/education/:edu_id',
+  passport.authenticate('jwt', { session: false }),
+  ({ user, params }, res) => {
+
+    const errors = {}
+    Profile.findOne({ user: user.id })
+           .then(profile => {
+             const removeIndex = profile.education.findIndex(exp => exp.id === params.edu_id)
+             if (removeIndex === -1) {
+               errors.education = 'experience not found'
+               return res.status(404).json(errors)
+             }
+
+             profile.education.splice(removeIndex, 1)
+             profile.save()
+                    .then(profile => res.json(profile))
+                    .catch(error => res.status(404).json(error))
+
+           })
+           .catch(errors => res.status(404).json(errors))
+
+  })
+
+/**
+ * @route - DELETE api/profile
+ * @desc - delete profile
+ * @access - private
+ */
+
+router.delete('/',
+  passport.authenticate('jwt', { session: false }),
+  ({ user }, res) => {
+
+    const errors = {}
+    Profile.findOneAndRemove({ user: user.id }).then(() => {
+      User.findOneAndRemove({ _id: user.id })
+          .then(() => res.json({ success: true }))
+    })
+
+  })
 
 export default router
