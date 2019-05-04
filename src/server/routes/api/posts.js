@@ -118,4 +118,51 @@ router.post('/unlike/:id', passport.authenticate('jwt', { session: false }), ({ 
          })
 })
 
+/**
+ * @route - POST api/posts/:id/comments/
+ * @desc - add comment to post
+ * @access - private
+ */
+router.post('/:id/comments', passport.authenticate('jwt', { session: false }), ({ params, body: request, user }, res) => {
+  const { errors, isValid } = validatePostInput(request)
+  if (!isValid) return res.status(400).json(errors)
+  Post.findById(params.id)
+      .then(post => {
+        const { text, name, avatar } = request
+        const newComment             = {
+          name,
+          avatar,
+          text,
+          user: user.id
+        }
+        post.comments.unshift(newComment)
+        post.save().then(post => res.json(post))
+
+      })
+      .catch(errors => res.status(404).json({ nopostfound: 'Post not found' }))
+})
+/**
+ * @route - DELETE api/posts/:id/comments/:comment_id
+ * @desc - delete post comment
+ * @access - private
+ */
+router.delete('/:id/comments/:comment_id', passport.authenticate('jwt', { session: false }), ({ params, body: request, user }, res) => {
+
+  Post.findById(params.id)
+      .then(post => {
+
+        const commentIndex = post.comments.findIndex(comment => comment._id.toString() === params.comment_id)
+        // check if comment exists
+        if (commentIndex === -1) return res.status(404).json({ commentnofound: 'comment not found' })
+        const comment = post.comments[commentIndex]
+        // check if current user can delete this comment
+        if (comment.user.toString() !== user.id.toString()) return res.status(401)
+
+        post.comments.splice(commentIndex, 1)
+        post.save().then(post => res.json(post))
+
+      })
+      .catch(errors => res.status(404).json(params))
+})
+
 export default router
