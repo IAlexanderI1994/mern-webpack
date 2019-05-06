@@ -31,7 +31,6 @@ server.use(passport.initialize())
 
 passportConfig(passport)
 
-
 const compiler             = webpack(config)
 const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer)
 const webpackHotMiddleware = require('webpack-hot-middleware')(compiler)

@@ -3,7 +3,7 @@ const webpack           = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 module.exports          = {
   entry: {
-    main: './src/main.js'
+    main: './src/client/main.js'
   },
   mode: 'development',
   output: {
@@ -66,10 +66,11 @@ module.exports          = {
       }
     ]
   },
+
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new HTMLWebpackPlugin({
-      template: './src/index.html'
+      template: './src/client/index.html'
     })
 
   ]
