@@ -17,7 +17,8 @@ module.exports          = {
     // при запуске дев сервера будет мониториться эта папка
     contentBase: 'dist',
     overlay: true,
-    hot: true
+    hot: true,
+    port: 8082
   },
   module: {
     rules: [
