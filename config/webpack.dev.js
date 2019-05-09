@@ -10,7 +10,8 @@ module.exports          = {
     filename: '[name]-bundle.js',
     path: path.resolve(__dirname, '../dist'),
     // отображение пути при подключении файла, например, вместо dist/index.js будет /index.js, если publicPath: '/'
-    publicPath: '/'
+    publicPath: '/',
+
   },
   devtool: 'source-map',
   devServer: {
@@ -18,7 +19,8 @@ module.exports          = {
     contentBase: 'dist',
     overlay: true,
     hot: true,
-    port: 8082
+    port: 8082,
+    historyApiFallback: true
   },
   module: {
     rules: [

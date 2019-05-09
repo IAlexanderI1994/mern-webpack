@@ -4,6 +4,7 @@ import config from '../../config/webpack.dev'
 import keys from '../../config/keys'
 
 import express from 'express'
+import fallback from 'express-history-api-fallback'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import passport from 'passport'
@@ -45,6 +46,11 @@ server.use('/api/users/', users)
 server.use('/api/posts/', posts)
 server.use('/api/profile/', profile)
 
+server.use(fallback('index.html', { root: path.resolve(__dirname, '../../dist') }))
+
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public/index.html'));
+// });
 server.listen(8080, () => {
   console.log('Listening 8080... ')
 })
