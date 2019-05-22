@@ -5,10 +5,25 @@ import { store } from './store'
 import { Navbar } from './components/layout/Navbar'
 import { Landing } from './components/layout/Landing'
 import { Footer } from './components/layout/Footer'
-import { Login } from './components/auth/Login'
+import Login from './components/auth/Login'
 import Register from './components/auth/Register'
+import jwt_decode from 'jwt-decode'
+import setAuthToken from './utils/setAuthToken'
+import { setCurrentUser } from './actions/authActions'
 import './App.css'
 
+
+// check for token
+
+if ( localStorage.jwtToken) {
+  // set auth token
+  setAuthToken(localStorage.jwtToken)
+  // decode token
+  const decoded = jwt_decode(localStorage.jwtToken)
+  // set user and isAuthenticated
+  store.dispatch(setCurrentUser(decoded))
+
+}
 export class App extends Component {
   render () {
     return (
