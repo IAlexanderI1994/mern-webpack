@@ -48,9 +48,6 @@ server.use('/api/profile/', profile)
 
 server.use(fallback('index.html', { root: path.resolve(__dirname, '../../dist') }))
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'public/index.html'));
-// });
 server.listen(8080, () => {
   console.log('Listening 8080... ')
 })
