@@ -5,6 +5,8 @@ import TextFieldGroup from '../common/TextFieldGroup'
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup'
 import SelectListGroup from '../common/SelectListGroup'
 import InputGroup from '../common/InputGroup'
+import { createProfile } from '../../actions/profileActions'
+import { withRouter } from 'react-router-dom'
 
 class CreateProfile extends Component {
   constructor (props) {
@@ -31,9 +33,37 @@ class CreateProfile extends Component {
     this.toggleSocial = this.toggleSocial.bind(this)
   }
 
+  componentWillReceiveProps (nextProps) {
+
+    // if (nextProps.errors) {
+    //   this.setState({ errors: { a: 1, b: 2 } })
+    //   console.log(this.state.errors, nextProps.errors, this.setState)
+    // }
+    this.setState({ errors: nextProps.errors }, function () {
+      console.log(this.state.errors)
+    })
+
+  }
+
   onSubmit (e) {
     e.preventDefault()
-    console.log('submit')
+
+    const profileData = {
+      handle: this.state.handle,
+      company: this.state.company,
+      website: this.state.website,
+      location: this.state.location,
+      status: this.state.status,
+      skills: this.state.skills,
+      githubusername: this.state.githubusername,
+      bio: this.state.bio,
+      twitter: this.state.twitter,
+      facebook: this.state.facebook,
+      linkedin: this.state.linkedin,
+      youtube: this.state.youtube,
+      instagram: this.state.instagram,
+    }
+    this.props.createProfile(profileData, this.props.history)
 
   }
 
@@ -44,7 +74,8 @@ class CreateProfile extends Component {
 
   }
 
-  toggleSocial () {
+  toggleSocial (e) {
+    e.preventDefault()
     this.setState(prevState => ({ displaySocialInputs: !prevState.displaySocialInputs }))
   }
 
@@ -53,7 +84,7 @@ class CreateProfile extends Component {
     const { errors, displaySocialInputs } = this.state
 
     let socialInputs
-    if ( displaySocialInputs ) {
+    if (displaySocialInputs) {
       socialInputs = (
         <div>
 
@@ -71,7 +102,7 @@ class CreateProfile extends Component {
             value={this.state.facebook}
             icon="fab fa-facebook "
           />
-           <InputGroup
+          <InputGroup
             placeholder="Youtube channel URL"
             onChange={this.onChange}
             name="youtube"
@@ -85,7 +116,7 @@ class CreateProfile extends Component {
             value={this.state.linkedin}
             icon="fab fa-linkedin "
           />
-           <InputGroup
+          <InputGroup
             placeholder="Instagram Profile URL"
             onChange={this.onChange}
             name="instagram"
@@ -113,7 +144,7 @@ class CreateProfile extends Component {
           <div className="row">
             <div className="col-md-8 m-auto">
               <a href="dashboard.html" className="btn btn-light">
-                Go Back
+                Go Back 
               </a>
               <h1 className="display-4 text-center">Create Your Profile</h1>
               <p className="lead text-center">Let's get some information to make your profile stand out</p>
@@ -124,7 +155,7 @@ class CreateProfile extends Component {
                   onChange={this.onChange}
                   value={this.state.handle}
                   name="handle"
-                  errors={errors.handle}
+                  error={errors.handle}
                   info="A unique handle for your profile URL. Your full name, company name, nickname, etc (This CAN'T be changed later)"
                 />
                 <SelectListGroup
@@ -132,7 +163,7 @@ class CreateProfile extends Component {
                   onChange={this.onChange}
                   value={this.state.status}
                   name="status"
-                  errors={errors.status}
+                  error={errors.status}
                   info="Give us an idea of where you are at in your career"
                   options={options}
                 />
@@ -141,7 +172,7 @@ class CreateProfile extends Component {
                   onChange={this.onChange}
                   value={this.state.company}
                   name="handle"
-                  errors={errors.company}
+                  error={errors.company}
                   info="Could be your own company or one you work for"
                 />
                 <TextFieldGroup
@@ -149,7 +180,7 @@ class CreateProfile extends Component {
                   onChange={this.onChange}
                   value={this.state.website}
                   name="website"
-                  errors={errors.website}
+                  error={errors.website}
                   info="Could be your own or a company website"
                 />
                 <TextFieldGroup
@@ -157,7 +188,7 @@ class CreateProfile extends Component {
                   onChange={this.onChange}
                   value={this.state.location}
                   name="location"
-                  errors={errors.location}
+                  error={errors.location}
                   info="City & state suggested (eg. Boston, MA)"
                 />
                 <TextFieldGroup
@@ -165,7 +196,7 @@ class CreateProfile extends Component {
                   onChange={this.onChange}
                   value={this.state.skills}
                   name="skills"
-                  errors={errors.skills}
+                  error={errors.skills}
                   info="Please use comma separated values (eg. HTML,CSS,JavaScript,PHP)"
                 />
                 <TextFieldGroup
@@ -173,7 +204,7 @@ class CreateProfile extends Component {
                   onChange={this.onChange}
                   value={this.state.githubusername}
                   name="githubusername"
-                  errors={errors.githubusername}
+                  error={errors.githubusername}
                   info="If you want your latest repos and a Github link, include your username"
                 />
                 <TextFieldGroup
@@ -181,7 +212,7 @@ class CreateProfile extends Component {
                   onChange={this.onChange}
                   value={this.state.bio}
                   name="bio"
-                  errors={errors.bio}
+                  error={errors.bio}
                   info="Tell us a little about yourself"
                 />
 
@@ -205,10 +236,11 @@ class CreateProfile extends Component {
 CreateProfile.propTypes = {
   profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
+  createProfile: PropTypes.func.isRequired
 
 }
 const mapStateToProps   = (state) => ({
   profile: state.profile,
   errors: state.errors,
 })
-export default connect(mapStateToProps)(CreateProfile)
+export default connect(mapStateToProps, { createProfile })(withRouter(CreateProfile))
