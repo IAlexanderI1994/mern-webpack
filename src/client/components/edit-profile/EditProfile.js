@@ -5,10 +5,11 @@ import TextFieldGroup from '../common/TextFieldGroup'
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup'
 import SelectListGroup from '../common/SelectListGroup'
 import InputGroup from '../common/InputGroup'
-import { createProfile } from '../../actions/profileActions'
+import { createProfile, getCurrentProfile } from '../../actions/profileActions'
 import { withRouter } from 'react-router-dom'
+import { isEmpty } from '../../../server/validation/is-empty'
 
-class CreateProfile extends Component {
+class EditProfile extends Component {
   constructor (props) {
     super(props)
     this.state        = {
@@ -33,15 +34,56 @@ class CreateProfile extends Component {
     this.toggleSocial = this.toggleSocial.bind(this)
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentDidMount () {
+    this.props.getCurrentProfile()
+  }
 
-    // if (nextProps.errors) {
-    //   this.setState({ errors: { a: 1, b: 2 } })
-    //   console.log(this.state.errors, nextProps.errors, this.setState)
-    // }
-    this.setState({ errors: nextProps.errors }, function () {
-      console.log(this.state.errors)
-    })
+  componentWillReceiveProps (nextProps) {
+    this.setState({ errors: nextProps.errors })
+    if (nextProps.profile.profile) {
+      const { profile } = nextProps.profile
+      if (!profile.social) {
+        profile.social = {}
+      }
+
+      // Brings array skills back to the comma separated values
+      const skillsCSV = profile.skills.join(',')
+
+      const profileData = [
+
+        'company',
+        'website',
+        'location',
+        'githubusername',
+        'bio',
+      ]
+      const socialGroup = [
+        'twitter',
+        'facebook',
+        'linkedin',
+        'youtube',
+        'instagram',
+      ]
+      profileData.forEach(field => isEmpty(profile[field]) ? profile[field] = '' : true)
+      socialGroup.forEach(field => isEmpty(profile['social'][field]) ? profile['social'][field] = '' : true)
+
+      this.setState({
+        handle: profile.handle,
+        company: profile.company,
+        website: profile.website,
+        location: profile.location,
+        status: profile.status,
+        skills: skillsCSV,
+        githubusername: profile.githubusername,
+        bio: profile.bio,
+        twitter: profile.social.twitter,
+        facebook: profile.social.facebook,
+        linkedin: profile.social.linkedin,
+        youtube: profile.social.youtube,
+        instagram: profile.social.instagram,
+      })
+
+    }
 
   }
 
@@ -144,9 +186,9 @@ class CreateProfile extends Component {
           <div className="row">
             <div className="col-md-8 m-auto">
               <a href="dashboard.html" className="btn btn-light">
-                Go Back 
+                Go Back
               </a>
-              <h1 className="display-4 text-center">Create Your Profile</h1>
+              <h1 className="display-4 text-center">Edit Your Profile</h1>
               <p className="lead text-center">Let's get some information to make your profile stand out</p>
               <small className="d-block pb-3">* = required field</small>
               <form onSubmit={this.onSubmit}>
@@ -171,7 +213,7 @@ class CreateProfile extends Component {
                   placeholder="Company"
                   onChange={this.onChange}
                   value={this.state.company}
-                  name="handle"
+                  name="company"
                   error={errors.company}
                   info="Could be your own company or one you work for"
                 />
@@ -233,14 +275,15 @@ class CreateProfile extends Component {
   }
 }
 
-CreateProfile.propTypes = {
+EditProfile.propTypes = {
   profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  createProfile: PropTypes.func.isRequired
+  createProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
 
 }
-const mapStateToProps   = (state) => ({
+const mapStateToProps = (state) => ({
   profile: state.profile,
   errors: state.errors,
 })
-export default connect(mapStateToProps, { createProfile })(withRouter(CreateProfile))
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(withRouter(EditProfile))
