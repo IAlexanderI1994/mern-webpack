@@ -30,4 +30,13 @@ export const deleteAccount = () => dispatch => {
          .catch(({ response }) => dispatch({ type: GET_ERRORS, payload: response.data }))
   }
 }
+// add experience
+export const addExperience = (expData, history) => dispatch => {
+  axios
+    .post('/api/profile/experience', expData)
+    .then(res => history.push('/dashboard'))
+    .catch(({ response }) => dispatch({ type: GET_ERRORS, payload: response.data }))
+}
+
+
 
