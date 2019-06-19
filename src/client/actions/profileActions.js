@@ -18,12 +18,12 @@ export const clearCurrentProfile = () => ({
   type: CLEAR_CURRENT_PROFILE
 })
 
-export const createProfile = (profileData, history) => dispatch => {
+export const createProfile    = (profileData, history) => dispatch => {
   axios.post('/api/profile', profileData)
        .then(res => history.push('/dashboard'))
        .catch(({ response }) => dispatch({ type: GET_ERRORS, payload: response.data }))
 }
-export const deleteAccount = () => dispatch => {
+export const deleteAccount    = () => dispatch => {
   if (window.confirm('Are you sure? This can NOT be undone!')) {
     axios.delete('/api/profile')
          .then(res => dispatch({ type: 'SET_CURRENT_USER', payload: {} }))
@@ -31,10 +31,30 @@ export const deleteAccount = () => dispatch => {
   }
 }
 // add experience
-export const addExperience = (expData, history) => dispatch => {
+export const addExperience    = (expData, history) => dispatch => {
   axios
     .post('/api/profile/experience', expData)
     .then(res => history.push('/dashboard'))
+    .catch(({ response }) => dispatch({ type: GET_ERRORS, payload: response.data }))
+}
+export const addEducation     = (eduData, history) => dispatch => {
+  axios
+    .post('/api/profile/education', eduData)
+    .then(res => history.push('/dashboard'))
+    .catch(({ response }) => dispatch({ type: GET_ERRORS, payload: response.data }))
+}
+// Delete experience
+export const deleteExperience = (id) => dispatch => {
+  axios
+    .delete(`/api/profile/experience/${id}`)
+    .then(res => dispatch({ type: GET_PROFILE, payload: res.data }))
+    .catch(({ response }) => dispatch({ type: GET_ERRORS, payload: response.data }))
+}
+// Delete education
+export const deleteEducation = (id) => dispatch => {
+  axios
+    .delete(`/api/profile/education/${id}`)
+    .then(res => dispatch({ type: GET_PROFILE, payload: res.data }))
     .catch(({ response }) => dispatch({ type: GET_ERRORS, payload: response.data }))
 }
 
