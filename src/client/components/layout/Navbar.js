@@ -14,7 +14,6 @@ class Navbar extends Component {
   }
 
   render () {
-
     const { isAuthenticated, user } = this.props.auth
     const authLinks           = (
       <ul className="navbar-nav ml-auto">
@@ -52,8 +51,6 @@ class Navbar extends Component {
               </li>
             </ul>
             {isAuthenticated ? authLinks : guestLinks}
-
-
           </div>
         </div>
       </nav>

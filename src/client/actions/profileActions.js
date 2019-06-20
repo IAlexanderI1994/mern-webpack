@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GET_PROFILE, PROFILE_LOADING, CLEAR_CURRENT_PROFILE, GET_ERRORS } from './types'
+import { GET_PROFILE, PROFILE_LOADING, CLEAR_CURRENT_PROFILE, GET_ERRORS, GET_PROFILES } from './types'
 
 // get current profile
 
@@ -51,12 +51,18 @@ export const deleteExperience = (id) => dispatch => {
     .catch(({ response }) => dispatch({ type: GET_ERRORS, payload: response.data }))
 }
 // Delete education
-export const deleteEducation = (id) => dispatch => {
+export const deleteEducation  = (id) => dispatch => {
   axios
     .delete(`/api/profile/education/${id}`)
     .then(res => dispatch({ type: GET_PROFILE, payload: res.data }))
     .catch(({ response }) => dispatch({ type: GET_ERRORS, payload: response.data }))
 }
 
-
+export const getProfiles = () => dispatch => {
+  dispatch(setProfileLoading())
+  axios
+    .get('/api/profile/all')
+    .then(res => dispatch({ type: GET_PROFILES, payload: res.data }))
+    .catch(({ response }) => dispatch({ type: GET_PROFILES, payload: null }))
+}
 

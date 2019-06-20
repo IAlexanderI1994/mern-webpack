@@ -171,7 +171,7 @@ class CreateProfile extends Component {
                   placeholder="Company"
                   onChange={this.onChange}
                   value={this.state.company}
-                  name="handle"
+                  name="company"
                   error={errors.company}
                   info="Could be your own company or one you work for"
                 />

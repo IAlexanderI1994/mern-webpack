@@ -49,8 +49,8 @@ class Dashboard extends Component {
         // user is logged in but has no profile
         dashboardContent = (
           <div>
-            <p className="lead text-muted"> Добро пожаловать, {user.name} </p>
-            <p> Профиль не создан, пожалуйста, добавьте информацию </p>
+            <p className="lead text-muted"> Welcome, {user.name} </p>
+            <p> Profile is not exists yet </p>
             <Link to="/create-profile" className="btn btn-lg btn-info"> Create profile</Link>
 
           </div>
