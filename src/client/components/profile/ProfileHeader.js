@@ -1,13 +1,6 @@
 import React, { Component } from 'react'
 import { isEmpty } from '../../../server/validation/is-empty'
 
-function mapStateToProps (state) {
-  return {}
-}
-
-function mapDispatchToProps (dispatch) {
-  return {}
-}
 
 class ProfileHeader extends Component {
   render () {
@@ -54,5 +47,6 @@ class ProfileHeader extends Component {
     )
   }
 }
+
 
 export default ProfileHeader
