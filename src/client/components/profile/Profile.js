@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 import ProfileHeader from './ProfileHeader'
 import ProfileAbout from './ProfileAbout'
 import ProfileCreds from './ProfileCreds'
-import ProfileGithub from './ProfileGithub'
 import Spinner from '../common/Spinner'
 import { getProfileByHandle } from '../../actions/profileActions'
 
@@ -30,6 +29,13 @@ class Profile extends Component {
       this.props.getProfileByHandle(this.props.match.params.handle)
     }
   }
+  componentWillReceiveProps (nextProps, nextContext) {
+    if (nextProps.profile.profile === null && this.props.profile.loading) {
+
+      this.props.history.push('/not-found')
+
+    }
+  }
 
   render () {
     const { profile, loading } = this.props.profile
@@ -51,7 +57,6 @@ class Profile extends Component {
           <ProfileHeader profile={profile}/>
           <ProfileAbout profile={profile}/>
           <ProfileCreds education={profile.education} experience={profile.experience}/>
-          <ProfileGithub/>
         </div>
       )
     }
