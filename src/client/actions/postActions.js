@@ -14,3 +14,23 @@ export const addPost = postData => dispatch => {
       payload: response.data
     }))
 }
+// get post
+export const getPosts = () => dispatch => {
+
+
+  dispatch(setPostLoading())
+  axios
+    .get('api/posts', )
+    .then(({ data }) => dispatch({
+      type: GET_POSTS,
+      payload: data
+    }))
+    .catch(({ response }) => dispatch({
+      type: GET_POSTS,
+      payload: null
+    }))
+}
+
+export const setPostLoading = () => ({
+  type: POST_LOADING
+})
