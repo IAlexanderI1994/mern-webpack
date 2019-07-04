@@ -14,13 +14,48 @@ export const addPost = postData => dispatch => {
       payload: response.data
     }))
 }
-// get post
-export const getPosts = () => dispatch => {
 
+// add like
+export const addLike = id => dispatch => {
+  axios
+    .post(`api/posts/like/${id}`)
+    .then(({ data }) => dispatch(getPosts()))
+    .catch(({ response }) => dispatch({
+      type: GET_ERRORS,
+      payload: response.data
+    }))
+}
+
+// remove like
+export const removeLike = id => dispatch => {
+  axios
+    .post(`api/posts/unlike/${id}`)
+    .then(({ data }) => dispatch(getPosts()))
+    .catch(({ response }) => dispatch({
+      type: GET_ERRORS,
+      payload: response.data
+    }))
+}
+
+// delete post
+export const deletePost = id => dispatch => {
+  axios
+    .delete(`api/posts/${id}`)
+    .then(({ data }) => dispatch({
+      type: DELETE_POST,
+      payload: id
+    }))
+    .catch(({ response }) => dispatch({
+      type: GET_ERRORS,
+      payload: response.data
+    }))
+}
+// get post
+export const getPosts   = () => dispatch => {
 
   dispatch(setPostLoading())
   axios
-    .get('api/posts', )
+    .get('api/posts',)
     .then(({ data }) => dispatch({
       type: GET_POSTS,
       payload: data
