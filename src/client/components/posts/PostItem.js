@@ -37,7 +37,7 @@ class PostItem extends Component {
   }
 
   render () {
-    const { post, auth } = this.props
+    const { post, auth, showActions } = this.props
 
     return (
       <div className="card card-body mb-3">
@@ -53,23 +53,30 @@ class PostItem extends Component {
           </div>
           <div className="col-md-10">
             <p className="lead">{post.text}</p>
-            <button onClick={this.onLikeClick.bind(this, post._id)} type="button" className="btn btn-light mr-1">
-              <i className={classnames('fas fa-thumbs-up', {'text-info': this.findUserLike(post.likes)})}></i>
+            {showActions ? (
+              <span>
+                  <button onClick={this.onLikeClick.bind(this, post._id)} type="button" className="btn btn-light mr-1">
+              <i className={classnames('fas fa-thumbs-up', { 'text-info': this.findUserLike(post.likes) })}></i>
               <span className="badge badge-light">  {post.likes.length} </span>
             </button>
             <button onClick={this.onUnlikeClick.bind(this, post._id)} type="button" className="btn btn-light mr-1">
               <i className="text-secondary fas fa-thumbs-down"></i>
             </button>
-            <Link to={`/post/${post._id}`} className="btn btn-info mr-1">
+            <Link to={`/posts/${post._id}`} className="btn btn-info mr-1">
               Comments
             </Link>
 
-            {post.user === auth.user.id ?
-              (<button type="button" className="btn btn-danger mr-1" onClick={this.onDeleteClick.bind(this, post._id)}>
-                <i className="fas fa-times"/>
-              </button>) : null
+                {post.user === auth.user.id ?
+                  (<button type="button" className="btn btn-danger mr-1"
+                           onClick={this.onDeleteClick.bind(this, post._id)}>
+                    <i className="fas fa-times"/>
+                  </button>) : null
 
-            }
+                }
+              </span>
+
+            ) : null}
+
           </div>
         </div>
       </div>
@@ -77,7 +84,10 @@ class PostItem extends Component {
   }
 }
 
-PostItem.propTypes = {
+PostItem.defaultProps = {
+  showActions: true
+}
+PostItem.propTypes    = {
   auth: PropTypes.object.isRequired,
   post: PropTypes.object.isRequired,
   deletePost: PropTypes.func.isRequired,

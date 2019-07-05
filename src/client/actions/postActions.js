@@ -50,18 +50,33 @@ export const deletePost = id => dispatch => {
       payload: response.data
     }))
 }
-// get post
+// get posts
 export const getPosts   = () => dispatch => {
 
   dispatch(setPostLoading())
   axios
-    .get('api/posts',)
+    .get('/api/posts',)
     .then(({ data }) => dispatch({
       type: GET_POSTS,
       payload: data
     }))
     .catch(({ response }) => dispatch({
       type: GET_POSTS,
+      payload: null
+    }))
+}
+// get post
+export const getPost   = id => dispatch => {
+
+  dispatch(setPostLoading())
+  axios
+    .get(`/api/posts/${id}`,)
+    .then(({ data }) => dispatch({
+      type: GET_POST,
+      payload: data
+    }))
+    .catch(({ response }) => dispatch({
+      type: GET_POST,
       payload: null
     }))
 }
