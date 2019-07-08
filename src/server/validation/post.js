@@ -11,7 +11,7 @@ export  function validatePostInput (data) {
   if (!validator.isLength(text, {
     min: 10,
     max: 300
-  })) errors.text = 'text field must be between 6 and 12 characters'
+  })) errors.text = 'text field must be between 10 and 300 characters'
 
   return { errors, isValid: isEmpty(errors) }
 }

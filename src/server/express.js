@@ -23,7 +23,7 @@ server.use(bodyParser.json())
 const { mongoURI: db } = keys
 
 mongoose
-  .connect(db, { useFindAndModify: false })
+  .connect(db, { useFindAndModify: false, useNewUrlParser: true })
   .then(() => console.log('DB connected'))
   .catch(e => console.log(e))
 
