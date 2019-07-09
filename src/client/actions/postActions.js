@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { ADD_POST, GET_POST, GET_POSTS, POST_LOADING, DELETE_POST, GET_ERRORS } from './types'
+import { ADD_POST, GET_POST, GET_POSTS, POST_LOADING, DELETE_POST, GET_ERRORS, CLEAR_ERRORS } from './types'
 
 // add post
 export const addPost = postData => dispatch => {
+  dispatch(clearErrors())
   axios
     .post('api/posts', postData)
     .then(({ data }) => dispatch({
@@ -89,7 +90,7 @@ export const setPostLoading = () => ({
 
 // add comment
 export const addComment = (postId, commentData) => dispatch => {
-  console.log(commentData)
+  dispatch(clearErrors())
   axios
     .post(`/api/posts/${postId}/comments/`, commentData)
     .then(({ data }) => dispatch({
@@ -101,3 +102,21 @@ export const addComment = (postId, commentData) => dispatch => {
       payload: response.data
     }))
 }
+// delete comment
+export const deleteComment = (postId, commentId) => dispatch => {
+
+  axios
+    .delete(`/api/posts/${postId}/comments/${commentId}`)
+    .then(({ data }) => dispatch({
+      type: GET_POST,
+      payload: data
+    }))
+    .catch(({ response }) => dispatch({
+      type: GET_ERRORS,
+      payload: response.data
+    }))
+}
+
+export const clearErrors = () => ({
+  type: CLEAR_ERRORS
+})

@@ -1,4 +1,5 @@
 export const GET_ERRORS            = 'GET_ERRORS',
+             CLEAR_ERRORS          = 'CLEAR_ERRORS',
              SET_CURRENT_USER      = 'SET_CURRENT_USER',
              GET_PROFILE           = 'GET_PROFILE',
              PROFILE_LOADING       = 'PROFILE_LOADING',
@@ -10,3 +11,4 @@ export const GET_ERRORS            = 'GET_ERRORS',
              GET_POSTS             = 'GET_POSTS',
              ADD_POST              = 'ADD_POST',
              DELETE_POST           = 'DELETE_POST'
+
