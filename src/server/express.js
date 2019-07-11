@@ -46,7 +46,11 @@ server.use('/api/users/', users)
 server.use('/api/posts/', posts)
 server.use('/api/profile/', profile)
 
-server.use(fallback('index.html', { root: path.resolve(__dirname, '../../dist') }))
+//server.use(fallback('index.html', { root: path.resolve(__dirname, '../../dist') }))
+
+server.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../../dist', 'index.html'))
+})
 
 server.listen(8080, () => {
   console.log('Listening 8080... ')
